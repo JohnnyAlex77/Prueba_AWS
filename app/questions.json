@@ -1,0 +1,962 @@
+[
+    {
+      "id": 1,
+      "text": "¿Cuál es una de las principales desventajas de una arquitectura con un acoplamiento ajustado (tightly coupled)?",
+      "options": [
+        "Requiere obligatoriamente el uso de bases de datos NoSQL.",
+        "El error de un solo componente o función puede provocar la caída o fallo de todo el sistema.",
+        "Reduce drásticamente los costos de transferencia de datos locales.",
+        "Impide de forma absoluta la comunicación sincrónica entre servidores web y de aplicaciones."
+      ],
+      "correct": ["B"],
+      "justification": "En las arquitecturas con acoplamiento ajustado, los componentes dependen directamente unos de otros y se comunican de forma sincrónica. Si un servidor de aplicaciones falla, las solicitudes web fallarán de inmediato, afectando la disponibilidad total del sistema."
+    },
+    {
+      "id": 2,
+      "text": "Un arquitecto de la nube desea diseñar una arquitectura de acoplamiento débil (loosely coupled) para mejorar la resiliencia a nivel de infraestructura. ¿Qué servicio o componente actúa como una solución de acoplamiento débil sincrónico?",
+      "options": [
+        "Amazon Simple Queue Service (Amazon SQS)",
+        "Elastic Load Balancing (ELB)",
+        "Amazon Simple Notification Service (Amazon SNS)",
+        "Amazon MQ"
+      ],
+      "correct": ["B"],
+      "justification": "El acoplamiento débil se puede lograr mediante enfoques sincrónicos y asincrónicos. Elastic Load Balancing (ELB) es un ejemplo clásico a nivel de infraestructura sincrónica, ya que desacopla el cliente de las instancias finales y gestiona automáticamente el enrutamiento de conmutación por error sin romper la sesión directa de red."
+    },
+    {
+      "id": 3,
+      "text": "Se requiere implementar una mensajería de tipo punto a punto de forma asincrónica. ¿Qué términos describen correctamente a las aplicaciones emisora y receptora en este modelo?",
+      "options": [
+        "Publicador y Suscriptor",
+        "Broker y Agente",
+        "Productor y Consumidor",
+        "Servidor y Cliente distribuido"
+      ],
+      "correct": ["C"],
+      "justification": "En el modelo punto a punto (asincrónico basado en colas), la aplicación que envía el mensaje se denomina 'productor' y la que extrae y procesa el mensaje de la cola se llama 'consumidor'."
+    },
+    {
+      "id": 4,
+      "text": "¿Cuál es el tamaño máximo permitido para un mensaje individual en una cola estándar de Amazon SQS?",
+      "options": [
+        "64 KB",
+        "128 KB",
+        "256 KB",
+        "1024 KB (1 MB)"
+      ],
+      "correct": ["C"],
+      "justification": "Amazon SQS define de manera predeterminada que un mensaje individual puede tener un tamaño máximo de 256 KB de datos de texto."
+    },
+    {
+      "id": 5,
+      "text": "Una empresa necesita procesar órdenes de compra de manera que se garantice estrictamente el orden de llegada (First-In, First-Out) y que cada mensaje se procese exactamente una vez. ¿Qué tipo de cola de Amazon SQS se debe seleccionar?",
+      "options": [
+        "Cola Estándar",
+        "Cola de Mensajes Fallidos (DLQ)",
+        "Cola FIFO",
+        "Cola de Sondeo Prolongado"
+      ],
+      "correct": ["C"],
+      "justification": "Las colas FIFO (First-In-First-Out) complementan a las colas estándar garantizando el orden estricto de entrega y el procesamiento 'exactly-once', ideales para operaciones críticas como la captura y cumplimiento de pedidos."
+    },
+    {
+      "id": 6,
+      "text": "Un arquitecto de soluciones nota que la aplicación realiza solicitudes frecuentes a SQS y recibe un número elevado de respuestas vacías, lo que incrementa los costos. ¿Qué parámetro de configuración se debe aumentar para mitigar esto?",
+      "options": [
+        "El periodo de retención de mensajes de la cola.",
+        "El tiempo de espera para recibir mensajes (Sondeo prolongado / Long polling).",
+        "El tiempo de espera de visibilidad predeterminado (Visibility timeout).",
+        "El tamaño máximo permitido del mensaje."
+      ],
+      "correct": ["B"],
+      "justification": "Incrementar el tiempo de espera para recibir mensajes por encima de 0 activa el sondeo prolongado (long polling). Esto hace que SQS espere a que un mensaje llegue a la cola antes de enviar una respuesta, disminuyendo significativamente la cantidad de respuestas vacías y reduciendo costos."
+    },
+    {
+      "id": 7,
+      "text": "Durante el procesamiento de un mensaje en SQS, ¿qué ocurre cuando se inicia el 'Reloj de tiempo de espera de visibilidad' (Visibility Timeout)?",
+      "options": [
+        "El mensaje se elimina automáticamente de la cola para que nadie más lo vea.",
+        "El mensaje se duplica y se envía a una cola de mensajes fallidos de inmediato.",
+        "El mensaje permanece en la cola pero se oculta temporalmente a otros consumidores mientras el actual lo procesa.",
+        "La aplicación productora detiene el envío de datos hasta que el reloj llegue a cero."
+      ],
+      "correct": ["C"],
+      "justification": "El tiempo de espera de visibilidad es el periodo durante el cual Amazon SQS impide que otros componentes consumidores reciban y procesen un mensaje que ya ha sido extraído por un consumidor activo."
+    },
+    {
+      "id": 8,
+      "text": "Se desea enviar notificaciones de eventos en tiempo real simultáneamente a múltiples destinos, incluyendo funciones AWS Lambda, correos electrónicos y colas SQS (Modelo Fan-out). ¿Qué tipo de modelo de mensajería y servicio es el más adecuado?",
+      "options": [
+        "Modelo Punto a punto mediante Amazon SQS",
+        "Modelo Publicación/Suscripción (Pub/Sub) mediante Amazon SNS",
+        "Modelo Híbrido mediante Amazon MQ",
+        "Modelo de Almacenamiento Compartido mediante Amazon EFS"
+      ],
+      "correct": ["B"],
+      "justification": "Amazon SNS utiliza un modelo de Publicación/Suscripción (pub/sub) basado en 'temas' para distribuir un único mensaje a múltiples suscriptores simultáneamente (distribución de uno a varios o fan-out)."
+    },
+    {
+      "id": 9,
+      "text": "¿Cuál es una diferencia clave en el mecanismo de entrega de mensajes entre Amazon SNS y Amazon SQS?",
+      "options": [
+        "Amazon SNS requiere que los consumidores extraigan (pull) activamente los mensajes, mientras que SQS los inserta (push).",
+        "Amazon SNS utiliza un mecanismo de inserción (push/pasivo) hacia los suscriptores, mientras que Amazon SQS utiliza un mecanismo de extracción (pull/activo) por parte de los consumidores.",
+        "Amazon SQS ofrece persistencia de mensajes nula, mientras que Amazon SNS almacena los mensajes por un periodo de hasta 14 días.",
+        "Amazon SNS solo soporta entrega de mensajes a servidores locales (on-premises)."
+      ],
+      "correct": ["B"],
+      "justification": "Amazon SNS funciona mediante 'push' enviando las alertas directamente a los destinos registrados. SQS funciona mediante 'pull', donde los trabajadores deben solicitar de forma activa los mensajes a la cola."
+    },
+    {
+      "id": 10,
+      "text": "Una organización posee una arquitectura heredada con brokers de mensajería que utilizan protocolos estándar como Apache ActiveMQ o RabbitMQ y desea migrarlos a la nube de AWS minimizando los cambios de código. ¿Qué servicio administrado es el indicado?",
+      "options": [
+        "Amazon Simple Queue Service (Amazon SQS)",
+        "Amazon Simple Notification Service (Amazon SNS)",
+        "Amazon MQ",
+        "AWS Lambda"
+      ],
+      "correct": ["C"],
+      "justification": "Amazon MQ es un servicio de broker de mensajes completamente administrado compatible con APIs y protocolos estándar de la industria (como los de Apache ActiveMQ y RabbitMQ). Está especialmente diseñado para facilitar la migración de aplicaciones e integraciones híbridas existentes."
+    },
+    {
+      "id": 11,
+      "text": "¿Cuál de los siguientes es un beneficio clave de las arquitecturas sin servidor (Serverless) de AWS según el material del módulo?",
+      "options": [
+        "Permite la administración total del sistema operativo por parte del usuario.",
+        "Escalado continuo y alta disponibilidad integrada sin administración de servidores.",
+        "Capacidad exclusiva para ejecutar cargas de trabajo monolíticas de más de 24 horas.",
+        "Facturación de costos fijos mensuales independientemente de las invocaciones."
+      ],
+      "correct": ["B"],
+      "justification": "Los beneficios de la tecnología sin servidor de AWS incluyen: sin administración de servidores, servicios de pago por valor, escalado continuo y alta disponibilidad integrada."
+    },
+    {
+      "id": 12,
+      "text": "Al diseñar un microservicio, ¿cuál de las siguientes características describe correctamente su naturaleza autónoma y especializada?",
+      "options": [
+        "Debe compartir el código y la base de datos con otros servicios para optimizar costos.",
+        "Se comunica mediante llamadas directas a la memoria del servidor de aplicaciones.",
+        "Realiza una única función empresarial, se escala de forma independiente y tiene su propio almacén de datos.",
+        "Es administrado exclusivamente de forma centralizada por un solo equipo macro de toda la empresa."
+      ],
+      "correct": ["C"],
+      "justification": "Los microservicios son autónomos y especializados. Tienen su propio almacén de datos, realizan una única función empresarial, son sin estado y se comunican a través de API bien definidas."
+    },
+    {
+      "id": 13,
+      "text": "Un arquitecto de soluciones necesita implementar una función de cómputo que se ejecute en respuesta a la carga de un archivo en Amazon S3. ¿Cuál es el límite máximo de duración permitido para una función de AWS Lambda en este escenario?",
+      "options": [
+        "5 minutos",
+        "10 minutos",
+        "15 minutos",
+        "30 minutos"
+      ],
+      "correct": ["C"],
+      "justification": "Una función de AWS Lambda tiene una duración máxima de ejecución por invocación de 15 minutos."
+    },
+    {
+      "id": 14,
+      "text": "¿Qué mecanismo se puede utilizar dentro de AWS Lambda para empaquetar dependencias de código o tiempos de ejecución personalizados y reutilizarlos en múltiples funciones de una región?",
+      "options": [
+        "Dockerfiles integrados",
+        "Capas de Lambda (Lambda Layers)",
+        "Máquinas virtuales Firecracker",
+        "Mapeos de fuentes de eventos"
+      ],
+      "correct": ["B"],
+      "justification": "Las capas Lambda (Lambda Layers) permiten empaquetar dependencias de código o tiempos de ejecución personalizados para que todas las funciones de Lambda de la región los reutilicen."
+    },
+    {
+      "id": 15,
+      "text": "¿En qué situación un arquitecto de la nube debería elegir una solución basada en contenedores (como Amazon ECS con AWS Fargate) en lugar de funciones de AWS Lambda?",
+      "options": [
+        "Cuando el servicio se invoca menos de 10 veces al día.",
+        "Cuando la aplicación requiere un tiempo de ejecución continuo superior a los 15 minutos o más de 10 GB de memoria.",
+        "Cuando se busca eliminar por completo la configuración del escalado automático.",
+        "Únicamente cuando la aplicación requiera un almacenamiento estático en Amazon S3."
+      ],
+      "correct": ["B"],
+      "justification": "Se eligen contenedores en lugar de funciones AWS Lambda si el servicio se ejecuta durante más de 15 minutos, se requieren aplicaciones con uso intensivo de memoria (más de 10 GB), o para migrar contenedores heredados sin refactorizar."
+    },
+    {
+      "id": 16,
+      "text": "¿Cuál es la principal diferencia entre Amazon Elastic Container Service (Amazon ECS) y Amazon Elastic Kubernetes Service (Amazon EKS)?",
+      "options": [
+        "Amazon ECS utiliza servidores físicos compartidos y Amazon EKS funciona exclusivamente sin servidor con Fargate.",
+        "Amazon ECS proporciona el conjunto de herramientas nativo de Amazon, mientras que Amazon EKS utiliza el conjunto de herramientas de Kubernetes.",
+        "Amazon EKS no admite el uso de contenedores Docker ni registros como Amazon ECR.",
+        "Amazon ECS es significativamente más complejo de administrar y requiere configuración manual de cada clúster de control."
+      ],
+      "correct": ["B"],
+      "justification": "Amazon ECS simplifica la creación y el mantenimiento de clústeres usando el conjunto de herramientas de Amazon ECS. Amazon EKS ofrece más control mediante el ecosistema y conjunto de herramientas de Kubernetes."
+    },
+    {
+      "id": 17,
+      "text": "Se requiere diseñar un flujo de trabajo asincrónico complejo de larga duración que rastree transacciones comerciales, maneje reintentos y orqueste múltiples servicios de AWS reteniendo el historial de ejecución de forma persistente. ¿Qué tipo de flujo de trabajo de AWS Step Functions se debe seleccionar?",
+      "options": [
+        "Flujo de trabajo exprés (Express Workflow)",
+        "Flujo de trabajo sincrónico",
+        "Flujo de trabajo estándar (Standard Workflow)",
+        "Flujo de trabajo de actividad directa"
+      ],
+      "correct": ["C"],
+      "justification": "Los flujos de trabajo estándar (Standard Workflows) se utilizan para ejecuciones de larga duración, tienen un historial completo en la consola y el progreso se persiste en cada transición de estado."
+    },
+    {
+      "id": 18,
+      "text": "Al definir una máquina de estados en AWS Step Functions utilizando el lenguaje de Amazon States Language, ¿qué tipo de estado se asocia con la ejecución de tareas integradas con servicios de AWS o actividades alojadas?",
+      "options": [
+        "Choice (Elección)",
+        "Task (Tarea)",
+        "Pass (Paso)",
+        "Parallel (Paralelo)"
+      ],
+      "correct": ["B"],
+      "justification": "El estado de tipo 'Task' (Tarea) se integra con servicios de AWS o realiza una actividad alojada en cualquier lugar de cómputo."
+    },
+    {
+      "id": 19,
+      "text": "Un equipo de desarrollo desea exponer sus microservicios de forma económica y con la menor latencia posible mediante una API RESTful sin requerir características avanzadas de administración como validación de cargas útiles o planes de uso. ¿Qué tipo de API de Amazon API Gateway es más adecuada?",
+      "options": [
+        "API REST",
+        "API de WebSocket",
+        "API HTTP",
+        "API Privada Dedicada"
+      ],
+      "correct": ["C"],
+      "justification": "Se utilizan las API HTTP cuando se necesita una latencia menor y un costo inferior al de las API REST, siendo ideales para la exposición directa de microservicios."
+    },
+    {
+      "id": 20,
+      "text": "Siguiendo los principios del Marco de AWS Well-Architected para arquitecturas sin servidor, ¿cuál de las siguientes opciones constituye una práctica recomendada dentro del pilar de Fiabilidad?",
+      "options": [
+        "Almacenar todas las claves de cifrado en texto plano dentro del código de la función Lambda.",
+        "Utilizar un mecanismo de cola de mensajes fallidos (Dead Letter Queue) para retener, investigar y volver a intentar las transacciones fallidas.",
+        "Desactivar el escalado automático para controlar y predecir de forma exacta los costos mensuales.",
+        "Centralizar todas las funciones de negocio en un único monolito en la nube para simplificar la identidad."
+      ],
+      "correct": ["B"],
+      "justification": "Dentro del pilar de fiabilidad del marco AWS Well-Architected, las prácticas recomendadas dictan utilizar mecanismos de colas de mensajes fallidos para retener y volver a intentar transacciones, así como revertir las transacciones fallidas."
+    },
+    {
+      "id": 21,
+      "text": "Al diseñar una infraestructura de datos, ¿qué par de características de las 'Cinco V' impulsan principalmente los requisitos de escalado y rendimiento esperados en una canalización?",
+      "options": [
+        "El Valor y la Veracidad.",
+        "El Volumen y la Velocidad.",
+        "La Variedad y la Veracidad.",
+        "El Valor y la Variedad."
+      ],
+      "correct": ["B"],
+      "justification": "Según las conclusiones clave de las características de los datos, el volumen y la velocidad juntos impulsan los requisitos de escalado y rendimiento esperados de su canalización."
+    },
+    {
+      "id": 22,
+      "text": "Un analista de datos prefiere tener la flexibilidad de crear nuevas consultas personalizadas y necesita acceder a la mayor cantidad de datos sin procesar y no estructurados dentro de un lago de datos. ¿Qué patrón de ingesta heterogéneo se adapta mejor a este requerimiento?",
+      "options": [
+        "Ingesta Homogénea (tal como está).",
+        "Extracción, Transformación y Carga (ETL).",
+        "Extracción, Carga y Transformación (ELT).",
+        "Procesamiento por microlotes mediante colas estructuradas."
+      ],
+      "correct": ["C"],
+      "justification": "El patrón de Extracción, Carga y Transformación (ELT) funciona bien con datos no estructurados destinados a un lago de datos y ofrece flexibilidad para crear nuevas consultas, ya que los analistas pueden acceder a más datos sin procesar."
+    },
+    {
+      "id": 23,
+      "text": "Se requiere mover un gran volumen de archivos compartidos e históricos desde un servidor local (NFS/SMB) de un centro de datos de investigación hacia Amazon S3 de forma rápida, automatizada y conservando los metadatos. ¿Qué servicio administrado de AWS es el adecuado para esta tarea?",
+      "options": [
+        "Amazon AppFlow",
+        "AWS Data Exchange",
+        "AWS DataSync",
+        "Amazon Kinesis Data Firehose"
+      ],
+      "correct": ["C"],
+      "justification": "AWS DataSync es un servicio de migración de datos completamente administrado que simplifica, automatiza y acelera la copia de datos de archivos y objetos (como recursos compartidos de archivos) hacia y desde los servicios de almacenamiento de AWS, conservando los metadatos y validando la integridad."
+    },
+    {
+      "id": 24,
+      "text": "Durante la ingesta y procesamiento por lotes en una arquitectura de datos moderna, se necesita un componente que sea capaz de descubrir automáticamente el esquema de los archivos sin procesar en Amazon S3 y organizarlos en un catálogo de metadatos. ¿Qué herramienta específica cumple este rol?",
+      "options": [
+        "AWS Glue DataBrew",
+        "Rastreadores de AWS Glue (Crawlers)",
+        "Amazon QuickSight",
+        "Amazon OpenSearch Dashboards"
+      ],
+      "correct": ["B"],
+      "justification": "Dentro de los componentes de AWS Glue para arquitecturas modernas, los rastreadores (crawlers) de AWS Glue se encargan de descubrir el esquema de los datos estructurados o semiestructurados para luego organizarlos en el Catálogo de Datos de AWS Glue."
+    },
+    {
+      "id": 25,
+      "text": "Para acelerar las cargas de trabajo de análisis y optimizar los costos de almacenamiento con el tiempo, un ingeniero de datos decide transformar archivos masivos de registros tabulares de formato .csv a un formato orientado a columnas adecuado para el procesamiento paralelo. ¿A qué formato debe convertirse?",
+      "options": [
+        ".json",
+        ".parquet",
+        ".txt",
+        ".xml"
+      ],
+      "correct": ["B"],
+      "justification": "El formato .parquet almacena los datos en forma de columnas, está optimizado para el almacenamiento y es adecuado para el procesamiento en paralelo. Convertir .csv a .parquet acelera las cargas de trabajo, ahorrando espacio de almacenamiento, costos y tiempo."
+    },
+    {
+      "id": 26,
+      "text": "Una empresa de videojuegos requiere capturar datos de interacción de usuarios de forma continua y entregarlos a un bucket de Amazon S3 mediante ciclos de microlotes, convirtiendo de forma automática el formato de entrada JSON a Parquet sin necesidad de escribir código personalizado. ¿Qué solución de streaming de AWS es la más sencilla para este caso?",
+      "options": [
+        "Amazon Kinesis Data Streams",
+        "Amazon Kinesis Data Firehose",
+        "Amazon Managed Streaming para Apache Kafka (Amazon MSK)",
+        "Amazon Managed Service para Apache Flink"
+      ],
+      "correct": ["B"],
+      "justification": "Amazon Kinesis Data Firehose captura y transforma los datos de streaming casi en tiempo real y los entrega al destino usando ciclos de microlotes. Puede convertir el formato de entrada JSON a Parquet antes de guardarlo y no requiere codificación, siendo la opción más sencilla."
+    },
+    {
+      "id": 27,
+      "text": "¿Qué servicio de streaming de la familia Amazon Kinesis se debe seleccionar si la arquitectura requiere almacenamiento temporal de la transmisión de datos por hasta 365 días y la capacidad de que múltiples consumidores independientes reproduzcan los datos simultáneamente?",
+      "options": [
+        "Amazon Kinesis Data Firehose",
+        "Amazon Managed Service para Apache Flink",
+        "Amazon Kinesis Data Streams",
+        "Amazon Managed Streaming para Apache Kafka"
+      ],
+      "correct": ["C"],
+      "justification": "Amazon Kinesis Data Streams proporciona almacenamiento temporal para la transmisión de datos de hasta 365 días y brinda la posibilidad de que varios consumidores reproduzcan los datos de la transmisión al mismo tiempo, aunque requiere mayor configuración y personalización de código que Firehose."
+    },
+    {
+      "id": 28,
+      "text": "En el contexto del diseño de almacenamiento para una aplicación bancaria presentado en el módulo, ¿cuál de las siguientes combinaciones de servicios se asocia de forma correcta y óptima para manejar (1) las transacciones financieras de los clientes en caliente y (2) el análisis de registros para la detección de fraudes?",
+      "options": [
+        "(1) Amazon QuickSight y (2) Amazon Redshift",
+        "(1) Amazon Aurora / DynamoDB y (2) Amazon S3 / OpenSearch Service",
+        "(1) Amazon S3 y (2) AWS Glue DataBrew",
+        "(1) Amazon Athena y (2) Amazon EMR"
+      ],
+      "correct": ["B"],
+      "justification": "La solución del caso práctico bancario vincula las transacciones financieras individuales de clientes a bases de datos transaccionales como Aurora y DynamoDB (OLTP). Mientras que los registros de actividad para análisis de fraude se almacenan eficientemente en S3 y OpenSearch Service para facilitar búsquedas y análisis avanzados."
+    },
+    {
+      "id": 29,
+      "text": "Un ingeniero de datos necesita realizar una migración de tipo 'lift-and-shift' de una aplicación heredada basada en Apache Hadoop y Apache Spark hacia AWS, manteniendo un control total sobre la administración de la infraestructura de los clústeres. ¿Cuál es la opción adecuada?",
+      "options": [
+        "AWS Glue",
+        "Amazon EMR Sin Servidor (EMR Serverless)",
+        "Amazon EMR (basado en clústeres gestionados)",
+        "Amazon Athena para Apache Spark"
+      ],
+      "correct": ["C"],
+      "justification": "Amazon EMR gestionado permite administrar y controlar clústeres y es la solución recomendada para migrar mediante lift-and-shift aplicaciones heredadas de Apache Hadoop o Spark. Las opciones sin servidor como EMR Serverless o AWS Glue no permiten la administración ni el control directo de clústeres."
+    },
+    {
+      "id": 30,
+      "text": "Un analista de negocios necesita diseñar un panel de datos interactivo con tablas y gráficos dinámicos para compartirlo con los interesados de la organización, mientras que un científico de datos necesita ejecutar consultas SQL puntuales e interactivas directamente sobre archivos de S3 sin mover los datos. ¿Qué herramientas de AWS corresponden respectivamente a cada perfil?",
+      "options": [
+        "Amazon QuickSight y Amazon Athena SQL",
+        "Amazon OpenSearch y AWS Data Exchange",
+        "Amazon Redshift y AWS Glue Studio",
+        "Amazon EMR y Amazon AppFlow"
+      ],
+      "correct": ["A"],
+      "justification": "Amazon QuickSight es una herramienta de inteligencia empresarial ideal para que los analistas diseñen paneles interactivos y los compartan. Amazon Athena SQL es un motor de consultas interactivas que permite buscar en los archivos de S3 mediante lenguaje SQL estándar sin mover los datos."
+    },
+    {
+      "id": 31,
+      "text": "¿Cómo se define el Objetivo de Punto de Recuperación (RPO) en el contexto de la planificación para desastres?",
+      "options": [
+        "La cantidad máxima aceptable de tiempo que un proceso empresarial puede permanecer fuera de servicio después de un desastre.",
+        "La cantidad máxima aceptable de pérdida de datos medida en el tiempo transcurrido desde el último respaldo.",
+        "El costo total asignado para la replicación de datos en una región secundaria de AWS.",
+        "La frecuencia exacta con la que se deben realizar auditorías de seguridad según el Marco de AWS Well-Architected."
+      ],
+      "correct": ["B"],
+      "justification": "El RPO (Objetivo de Punto de Recuperación) mide la cantidad máxima aceptable de pérdida de datos tras un incidente no planificado, calculado en función del tiempo transcurrido desde el último respaldo (por ejemplo, pérdida de 8 horas de datos)."
+    },
+    {
+      "id": 32,
+      "text": "Si una organización determina que no puede permitir que sus aplicaciones y procesos estén caídos por más de 2 horas para evitar pérdidas significativas de ingresos, ¿qué métrica empresarial se está definiendo?",
+      "options": [
+        "Objetivo de Punto de Recuperación (RPO).",
+        "Objetivo de Tiempo de Recuperación (RTO).",
+        "Plan de Continuidad de Actividades (BCP).",
+        "Acuerdo de Nivel de Servicio (SLA)."
+      ],
+      "correct": ["B"],
+      "justification": "El RTO (Objetivo de Tiempo de Recuperación) es la cantidad máxima de tiempo aceptable que un proceso empresarial puede estar fuera de servicio antes de causar daños significativos o pérdidas financieras a la empresa."
+    },
+    {
+      "id": 33,
+      "text": "¿Cuál de los siguientes elementos NO forma parte integral de un Plan de Continuidad de Actividades (BCP)?",
+      "options": [
+        "Análisis del impacto empresarial.",
+        "Evaluación de riesgos.",
+        "Plan de recuperación de desastres (DR).",
+        "Estimación de costos de licencias comerciales externas."
+      ],
+      "correct": ["D"],
+      "justification": "Un Plan de Continuidad de Actividades (BCP) incluye de manera fundamental el Análisis del impacto empresarial, la Evaluación de riesgos, el Plan de recuperación de desastres y la determinación de RPO y RTO. Las licencias comerciales externas no forman parte de su estructura base."
+    },
+    {
+      "id": 34,
+      "text": "Un arquitecto de soluciones necesita implementar una estrategia de almacenamiento híbrido que permita realizar respaldos locales y transferir datos de forma automatizada hacia Amazon S3. ¿Qué servicio de AWS proporciona interfaces de archivo, volumen y cinta para este propósito?",
+      "options": [
+        "AWS DataSync.",
+        "AWS Storage Gateway.",
+        "AWS Direct Connect.",
+        "Amazon FSx."
+      ],
+      "correct": ["B"],
+      "justification": "AWS Storage Gateway actúa como un servicio de almacenamiento híbrido que expone tres interfaces nativas: puerta de enlace de archivos (File Gateway), de volúmenes (Volume Gateway) y de cintas (Tape Gateway) para transferir datos localmente hacia AWS."
+    },
+    {
+      "id": 35,
+      "text": "En el patrón de recuperación de desastres de 'Luz piloto' (Pilot Light), ¿qué estado guardan los servidores de cómputo principales (como instancias EC2) en la región secundaria durante la fase de preparación?",
+      "options": [
+        "Están completamente encendidos y gestionando la mitad del tráfico de producción en tiempo real.",
+        "Están configurados, pero permanecen apagados o inactivos, listos para ser activados y escalados mediante AMIs en caso de desastre.",
+        "Funcionan a baja capacidad de forma ininterrumpida las 24 horas del día, los 7 días de la semana.",
+        "No existen en absoluto; se deben empezar a programar desde cero cuando ocurre el desastre."
+      ],
+      "correct": ["B"],
+      "justification": "En el patrón 'Luz piloto' (Pilot Light), los datos se replican activamente (como bases de datos), pero los servidores esenciales de cómputo no se ejecutan continuamente. Se mantienen preparados mediante AMIs para aprovisionarse rápidamente solo en caso de un desastre."
+    },
+    {
+      "id": 36,
+      "text": "¿Cuál es el patrón de recuperación de desastres en AWS que ofrece el menor tiempo de recuperación (RTO casi en tiempo real) pero que implica el costo más elevado debido a que mantiene un entorno duplicado a plena capacidad en todo momento?",
+      "options": [
+        "Respaldo y restauración.",
+        "Luz piloto (Pilot Light).",
+        "Espera semiactiva (Warm Standby).",
+        "Multisitio (Multi-site)."
+      ],
+      "correct": ["D"],
+      "justification": "El patrón 'Multisitio' (Multi-site) duplica todo el entorno de producción a plena capacidad operativa de manera continua. Esto ofrece un RTO prácticamente en tiempo real mediante conmutación automática, pero conlleva el costo más alto de todos los patrones."
+    },
+    {
+      "id": 37,
+      "text": "Una empresa necesita una solución de recuperación de desastres rentable para una aplicación crítica. Requiere un RPO muy bajo (pocos minutos), una versión completamente funcional de las aplicaciones en funcionamiento continuo que maneje tráfico mínimo, y la capacidad de escalar automáticamente al 100% ante un fallo. ¿Qué patrón es el adecuado?",
+      "options": [
+        "Respaldo y restauración.",
+        "Luz piloto (Pilot Light).",
+        "Espera semiactiva (Warm Standby).",
+        "Multisitio (Multi-site)."
+      ],
+      "correct": ["C"],
+      "justification": "El patrón de 'Espera semiactiva' (Warm Standby) mantiene todos los componentes del sistema funcionando las 24 horas del día a baja capacidad y listos para gestionar una fracción del tráfico de forma inmediata. Se escala de forma automática a su capacidad máxima ante un fallo, siendo más rentable que un esquema multisitio completo."
+    },
+    {
+      "id": 38,
+      "text": "¿Qué características de Amazon RDS y Amazon DynamoDB se pueden utilizar para automatizar la replicación y protección de bases de datos en entornos multirregionales?",
+      "options": [
+        "Instancias spot de EC2 y políticas de AWS CloudFormation.",
+        "Copia de instantáneas en otra región (RDS) y tablas globales (DynamoDB).",
+        "EventBridge regional y balanceadores de carga clásicos (CLB).",
+        "Puertas de enlace de volumen de AWS Storage Gateway."
+      ],
+      "correct": ["B"],
+      "justification": "Amazon RDS permite guardar y copiar instantáneas automatizadas o manuales en regiones geográficas diferentes. Por su parte, Amazon DynamoDB ofrece 'Tablas globales' para desplegar bases de datos multirregionales y multiactivas de baja latencia."
+    },
+    {
+      "id": 39,
+      "text": "Desde la perspectiva del pilar de Fiabilidad del Marco de AWS Well-Architected, ¿cuál es una práctica recomendada crítica para la administración de errores en un plan de DR?",
+      "options": [
+        "Evitar realizar pruebas en entornos reales para no alterar la disponibilidad del sistema.",
+        "Probar la implementación de la recuperación de desastres con regularidad para validarla.",
+        "Reducir el gasto desactivando el almacenamiento automatizado de snapshots.",
+        "Delegar la conmutación por error únicamente a intervenciones humanas manuales de larga duración."
+      ],
+      "correct": ["B"],
+      "justification": "Dentro del pilar de Fiabilidad del Marco de AWS Well-Architected, se establece firmemente la práctica recomendada de probar la implementación de la recuperación de desastres periódicamente para validar que los mecanismos automatizados y los objetivos de RPO/RTO se cumplan fehacientemente."
+    },
+    {
+      "id": 40,
+      "text": "Conforme a las prácticas recomendadas de los pilares de Seguridad y Excelencia Operativa, ¿qué procesos deben definirse explícitamente para gestionar eventos de desastre e interrupciones?",
+      "options": [
+        "Un proceso de acceso de emergencia y un plan de comunicación con el cliente para las interrupciones.",
+        "Un esquema de cobro de tarifas de contingencia para usuarios finales.",
+        "La migración de todos los flujos de trabajo hacia un modelo exclusivo de nube privada.",
+        "La reconfiguración manual de toda la infraestructura de red sin usar automatización."
+      ],
+      "correct": ["A"],
+      "justification": "De acuerdo con el Marco de Well-Architected, el pilar de Seguridad prescribe el establecimiento de un proceso de acceso de emergencia, mientras que el pilar de Excelencia Operativa exige contar con un plan de comunicación estructurado hacia el cliente ante cualquier interrupción o desastre del servicio."
+    },
+    {
+      "id": 41,
+      "text": "¿Cuál es la principal ventaja de utilizar grupos en AWS Identity and Access Management (AWS IAM) en lugar de asignar políticas directamente a los usuarios?",
+      "options": [
+        "Los grupos permiten anidar múltiples subgrupos para reflejar jerarquías complejas organizacionales.",
+        "Permite heredar permisos basados en funciones de trabajo, facilitando la administración a escala cuando cambia el personal.",
+        "Las políticas asignadas a grupos anulan las políticas explícitas de Denegar (Deny) adjuntas directamente al usuario.",
+        "Los grupos incrementan automáticamente el rendimiento de las llamadas de API hacia los recursos de AWS."
+      ],
+      "correct": ["B"],
+      "justification": "Los grupos de IAM permiten estructurar permisos asociados a funciones laborales de modo que todos sus miembros hereden las directivas, evitando la tediosa tarea de actualizar políticas usuario por usuario. (Nota: Los grupos en IAM NO se pueden anidar)."
+    },
+    {
+      "id": 42,
+      "text": "Un arquitecto de la nube desea implementar una estrategia de autorización altamente escalable que defina permisos utilizando etiquetas (pares clave-valor) aplicadas tanto a identidades de IAM como a recursos de AWS. ¿Qué enfoque es este?",
+      "options": [
+        "Control de acceso basado en roles (RBAC).",
+        "Control de acceso basado en atributos (ABAC).",
+        "Listas de Control de Acceso (ACL).",
+        "Políticas de control de servicios (SCP)."
+      ],
+      "correct": ["B"],
+      "justification": "ABAC (Control de Acceso Basado en Atributos) utiliza atributos en forma de etiquetas (tags) en identidades y recursos, lo que permite simplificar la escala de permisos administrando una sola política en lugar de enumerar cada recurso individual (RBAC)."
+    },
+    {
+      "id": 43,
+      "text": "¿Qué componente o actor dentro de un sistema de federación es el responsable exclusivo de la autenticación del usuario final y de transmitir la información al proveedor de servicios?",
+      "options": [
+        "El Proveedor de Servicios (SP).",
+        "AWS Security Token Service (AWS STS).",
+        "El Proveedor de Identidad (IdP), como SAML u OpenID Connect.",
+        "Las políticas basadas en identidad de IAM."
+      ],
+      "correct": ["C"],
+      "justification": "En un sistema de federación de identidades, el Proveedor de Identidad (IdP) es la entidad de confianza encargada de autenticar la identidad del usuario (ej. validar su contraseña) y generar la confirmación correspondiente."
+    },
+    {
+      "id": 44,
+      "text": "¿Cuál es la función principal de AWS Security Token Service (AWS STS) dentro de la arquitectura de seguridad de AWS?",
+      "options": [
+        "Almacenar contraseñas y secretos de forma centralizada y segura en la nube.",
+        "Sincronizar directorios corporativos locales como Microsoft Active Directory directamente en AWS.",
+        "Generar dinámicamente credenciales temporales con privilegios limitados que caducan tras un periodo establecido.",
+        "Monitorear y registrar de forma continua los fallos de autenticación dentro de la consola."
+      ],
+      "correct": ["C"],
+      "justification": "AWS STS es un servicio web/API especializado que entrega credenciales de seguridad temporales y de privilegios acotados de forma dinámica a usuarios federados o aplicaciones, evitando credenciales estáticas de largo plazo."
+    },
+    {
+      "id": 45,
+      "text": "Se requiere proporcionar autenticación, autorización y administración de usuarios para una aplicación móvil, permitiendo además que los usuarios inicien sesión a través de proveedores sociales (como Google o Facebook). ¿Qué servicio es el más adecuado?",
+      "options": [
+        "AWS IAM Identity Center.",
+        "Amazon Cognito.",
+        "AWS Key Management Service (AWS KMS).",
+        "AWS Organizations."
+      ],
+      "correct": ["B"],
+      "justification": "Amazon Cognito está diseñado específicamente para proporcionar registro, inicio de sesión, control de acceso y federación con proveedores sociales o corporativos (SAML/OIDC) para aplicaciones móviles y web."
+    },
+    {
+      "id": 46,
+      "text": "Además del control de seguridad centralizado, ¿qué ventaja económica clave ofrece la consolidación de múltiples cuentas mediante AWS Organizations?",
+      "options": [
+        "Exención total del impuesto al valor agregado en todas las regiones.",
+        "Eliminación automática del coste de transferencia de datos entre diferentes regiones de AWS.",
+        "Acceso a descuentos de precios por niveles (precios por volumen masivo) al unificar el consumo de todas las cuentas.",
+        "Créditos de facturación mensuales fijos no reembolsables por cada cuenta miembro agregada."
+      ],
+      "correct": ["C"],
+      "justification": "AWS Organizations consolida la facturación de todas las cuentas miembro bajo un esquema unificado, lo que permite beneficiarse de los precios por volumen/niveles combinados de servicios como Amazon S3 o EC2."
+    },
+    {
+      "id": 47,
+      "text": "¿Cuál es el propósito fundamental de una Política de Control de Servicios (SCP) en AWS Organizations?",
+      "options": [
+        "Conceder explícitamente permisos administrativos avanzados a los usuarios de la cuenta raíz.",
+        "Establecer un límite o barrera de seguridad de los permisos máximos disponibles para todas las cuentas en una organización o unidad organizativa.",
+        "Sustituir por completo a las políticas basadas en identidad de IAM a nivel local.",
+        "Modificar los límites físicos de aprovisionamiento de recursos de hardware en los centros de datos de AWS."
+      ],
+      "correct": ["B"],
+      "justification": "Las SCP (Service Control Policies) determinan los permisos máximos posibles dentro de una cuenta afectada en la organización, actuando como barandillas o filtros ('guardrails'). No otorgan permisos por sí solas, sino que restringen las acciones delegables."
+    },
+    {
+      "id": 48,
+      "text": "¿En qué escenario es más recomendable priorizar el uso de cifrado simétrico en lugar del cifrado asimétrico?",
+      "options": [
+        "Cuando se comparte información fuera de los límites de red de la organización y se requiere no repudio.",
+        "Cuando las regulaciones prohíben explícitamente compartir la clave privada con terceros.",
+        "Cuando la velocidad, el costo computacional y el procesamiento eficiente de grandes volúmenes de datos son la máxima prioridad.",
+        "Cuando se necesita segregar de forma estricta el acceso mediante un par de clave pública y clave privada."
+      ],
+      "correct": ["C"],
+      "justification": "El cifrado simétrico procesa los datos con la misma clave tanto para cifrar como para descifrar, lo que lo vuelve significativamente más rápido y eficiente para computar grandes masas de información en reposo."
+    },
+    {
+      "id": 49,
+      "text": "¿En qué consiste la práctica conocida como cifrado de sobres?",
+      "options": [
+        "Almacenar datos en un bucket de Amazon S3 bloqueado físicamente contra escrituras.",
+        "Cifrar datos de texto sin formato con una clave de datos y, posteriormente, cifrar dicha clave de datos con otra clave de jerarquía superior.",
+        "Transmitir llaves criptográficas a través de correos electrónicos corporativos altamente encriptados.",
+        "Ocultar el tamaño original de un archivo añadiendo bits aleatorios antes de guardarlo en discos EBS."
+      ],
+      "correct": ["B"],
+      "justification": "El cifrado de sobres consiste en encriptar los datos planos con una clave de datos (Data Key) y luego encriptar dicha clave de datos con una llave raíz de cifrado de claves (como una clave KMS de AWS)."
+    },
+    {
+      "id": 50,
+      "text": "Una compañía desea descubrir automáticamente información confidencial (como datos de tarjetas de crédito o identificaciones) almacenada en Amazon S3 mediante el uso de machine learning y coincidencia de patrones. ¿Qué servicio de AWS debe implementar?",
+      "options": [
+        "AWS WAF.",
+        "Amazon Inspector.",
+        "Amazon Macie.",
+        "Amazon Detective."
+      ],
+      "correct": ["C"],
+      "justification": "Amazon Macie es el servicio de seguridad gestionado enfocado en la protección de datos que utiliza algoritmos de machine learning y patrones predefinidos para hallar información confidencial expuesta dentro de buckets de S3."
+    },
+    {
+      "id": 51,
+      "text": "Un Arquitecto de Soluciones necesita centralizar la recopilación de métricas e infraestructura operacional de una aplicación distribuida en varias zonas de disponibilidad, además de configurar alertas automáticas cuando el uso de CPU supere el 80%. ¿Qué servicio cumple nativamente con estas necesidades?",
+      "options": [
+        "Amazon EventBridge.",
+        "AWS Budgets.",
+        "Amazon CloudWatch.",
+        "AWS Auto Scaling."
+      ],
+      "correct": ["C"],
+      "justification": "Amazon CloudWatch recopila y rastrea de manera nativa métricas y registros (Logs) de los servicios de AWS, permitiendo además crear alarmas para arquitecturas responsivas basadas en umbrales como el porcentaje de CPU."
+    },
+    {
+      "id": 52,
+      "text": "¿Qué componente de Amazon EventBridge actúa como un enrutador de eventos que recibe notificaciones de cambios en los recursos de AWS y los entrega a un destino específico (como una función AWS Lambda) basándose en reglas?",
+      "options": [
+        "Un canal de entrega (Delivery Stream).",
+        "Un bus de eventos (Event Bus).",
+        "Un repositorio de métricas.",
+        "Una alarma de alta resolución."
+      ],
+      "correct": ["B"],
+      "justification": "Los buses de eventos (Event Buses) en Amazon EventBridge son enrutadores que reciben eventos desde diversas fuentes de AWS y toman decisiones de enrutamiento hacia uno o varios objetivos mediante el uso de reglas."
+    },
+    {
+      "id": 53,
+      "text": "Usted está explicando a un cliente el concept de elasticidad y cómo este se asocia con el escalado horizontal. ¿Cómo se define correctamente el escalado horizontal de cómputo en AWS?",
+      "options": [
+        "Reemplazar una instancia existente (como una t3.micro) por una de mayor capacidad (como una m5.large).",
+        "Incrementar o disminuir el número de instancias físicas disponibles que ejecutan la aplicación.",
+        "Modificar el tamaño y tipo del volumen de almacenamiento de EBS de forma dinámica.",
+        "Mudar la base de datos local hacia una arquitectura completamente sin servidor (Serverless)."
+      ],
+      "correct": ["B"],
+      "justification": "El escalado horizontal implica agregar recursos adicionales (como lanzar más instancias de EC2 en un grupo de Auto Scaling) o eliminarlos a medida que cambian las necesidades operativas de la infraestructura."
+    },
+    {
+      "id": 54,
+      "text": "Se está configurando un grupo de Amazon EC2 Auto Scaling para soportar una aplicación web de la cafetería. Si la configuración define la Capacidad Deseada = 2, Mínima = 1 y Máxima = 4. ¿Qué ocurre si la demanda actual es muy baja y las métricas de CloudWatch indican baja utilización?",
+      "options": [
+        "El grupo terminará todas las instancias activas para ahorrar costos (Capacidad = 0).",
+        "El grupo mantendrá el número de instancias en 2, a menos que una política de reducción dinámica explícitamente disminuya la capacidad hasta el mínimo de 1.",
+        "El equilibrador de carga (ELB) forzará al grupo a escalar de inmediato al máximo de 4 instancias por seguridad.",
+        "El grupo reemplazará las instancias automáticamente por tipos de clase inferiores."
+      ],
+      "correct": ["B"],
+      "justification": "Un grupo de Auto Scaling mantendrá de manera predeterminada la capacidad deseada (2) establecida. Solo reducirá horizontalmente la cantidad de instancias hasta el mínimo (1) si existen políticas dinámicas configuradas y activadas por alarmas específicas de baja utilización."
+    },
+    {
+      "id": 55,
+      "text": "La cafetería del negocio prevé un incremento de tráfico masivo y predecible todos los días a las 08:00 AM debido a las órdenes de desayuno de los clientes. ¿Qué mecanismo de escalado de Amazon EC2 Auto Scaling es el más adecuado para esta situación?",
+      "options": [
+        "Políticas de escalado dinámico por pasos.",
+        "Acciones de escalado programadas (Scheduled Actions).",
+        "Seguimiento de destino basado en machine learning.",
+        "Escalado reactivo por alarmas de alta resolución."
+      ],
+      "correct": ["B"],
+      "justification": "Las acciones programadas (Scheduled Actions) de Amazon EC2 Auto Scaling están diseñadas exactamente para cargas de trabajo predecibles donde se conoce con anticipación la fecha y hora exacta en la que se requerirá mayor capacidad."
+    },
+    {
+      "id": 56,
+      "text": "¿Cómo escala automáticamente su capacidad de cómputo Amazon Aurora Serverless ante picos intermitentes y variables de tráfico de lectura y escritura?",
+      "options": [
+        "Modificando el tamaño del volumen de almacenamiento gestionado por el servicio.",
+        "Escalando a través de Unidades de Capacidad de Aurora (ACUs) dentro de límites mínimos y máximos predefinidos.",
+        "Creando réplicas de lectura de Amazon RDS tradicionales en zonas de disponibilidad secundarias de forma asíncrona.",
+        "Incrementando el rendimiento mediante el aprovisionamiento de RCU y WCU de DynamoDB."
+      ],
+      "correct": ["B"],
+      "justification": "Amazon Aurora Serverless escala de forma automática la capacidad de procesamiento del clúster utilizando unidades de medida llamadas Unidades de Capacidad de Aurora (ACUs), ajustándose a la demanda real sin necesidad de redimensionar instancias manualmente."
+    },
+    {
+      "id": 57,
+      "text": "Un arquitecto de la nube necesita balancear el tráfico HTTP y HTTPS entrante a nivel de la capa de aplicación (Capa 7 de OSI), analizando las rutas de las solicitudes para dirigir el tráfico a diferentes microservicios (grupos objetivo). ¿Qué tipo de equilibrador de carga debe elegir?",
+      "options": [
+        "Network Load Balancer (Equilibrador de carga de red).",
+        "Gateway Load Balancer (Equilibrador de carga de puerta de enlace).",
+        "Application Load Balancer (Equilibrador de carga de aplicación).",
+        "Classic Load Balancer (Equilibrador de carga clásico)."
+      ],
+      "correct": ["C"],
+      "justification": "El Application Load Balancer (ALB) opera en la capa 7 (Capa de Aplicación) del modelo OSI y distribuye inteligentemente el tráfico basado en datos de la solicitud HTTP/HTTPS como las rutas URL hacia grupos objetivo específicos."
+    },
+    {
+      "id": 58,
+      "text": "¿Qué servicio de AWS actúa como un sistema de nombres de dominio (DNS) autoritativo de alta disponibilidad y permite realizar comprobaciones de estado de puntos de conexión para automatizar la conmutación por error (failover) regional?",
+      "options": [
+        "Amazon Route 53.",
+        "Elastic Load Balancing (ELB).",
+        "AWS Identity and Access Management (IAM).",
+        "Amazon CloudWatch Logs."
+      ],
+      "correct": ["A"],
+      "justification": "Amazon Route 53 es el servicio web de DNS autoritativo global de AWS que realiza enrutamiento de tráfico y cuenta con la capacidad de realizar comprobaciones de estado para desviar solicitudes de red lejos de puntos de conexión insalubres."
+    },
+    {
+      "id": 59,
+      "text": "Una empresa global distribuye contenido y desea que los usuarios finales de Europa sean redirigidos a servidores de AWS alojados en la región de Fráncfort, mientras que los usuarios de América sean dirigidos a Virginia, optimizando la experiencia según la ubicación de origen. ¿Qué política de enrutamiento de Route 53 resuelve esto?",
+      "options": [
+        "Enrutamiento sencillo.",
+        "Enrutamiento por conmutación por error.",
+        "Enrutamiento por geolocalización.",
+        "Enrutamiento basado en IP."
+      ],
+      "correct": ["C"],
+      "justification": "La política de enrutamiento por geolocalización permite a Route 53 servir contenido o dirigir las consultas de DNS basándose de forma estricta en la procedencia o ubicación geográfica del usuario final."
+    },
+    {
+      "id": 60,
+      "text": "Según las prácticas recomendadas del pilar de Fiabilidad del Marco de AWS Well-Architected para diseñar sistemas de alta disponibilidad, ¿cuál de las siguientes acciones es fundamental?",
+      "options": [
+        "Alojar toda la carga de trabajo en una sola instancia de cómputo sobredimensionada en una única subred pública.",
+        "Implementar la carga de trabajo en varias ubicaciones (Multi-AZ / Multi-Región) y automatizar la conmutación por error a recursos en buen estado.",
+        "Evitar por completo las notificaciones basadas en eventos para disminuir el costo mensual.",
+        "Escalar recursos de forma manual exclusivamente durante horarios de mantenimiento del centro de datos."
+      ],
+      "correct": ["B"],
+      "justification": "El pilar de Fiabilidad del Marco de AWS Well-Architected dicta que los sistemas de alta disponibilidad deben mitigar los puntos únicos de falla desplegando cargas de trabajo en varias ubicaciones aisladas (Multi-AZ) y automatizando los mecanismos de conmutación por error."
+    },
+    {
+      "id": 61,
+      "text": "¿Cuál es uno de los principales riesgos asociados con la creación y gestión manual de arquitecturas en la nube de AWS?",
+      "options": [
+        "Aumento innecesario en los cargos de facturación de la consola de administración de AWS.",
+        "Inconsistencia en las configuraciones, falta de control de versiones y carencia de pistas de auditoría.",
+        "Limitación estricta al uso de servicios avanzados de bases de datos como Amazon RDS o DynamoDB.",
+        "Restricción del acceso multiusuario a la Consola de Administración de AWS."
+      ],
+      "correct": ["B"],
+      "justification": "Los procesos manuales son propensos a errores, poco fiables e inadecuados para escalar, creando riesgos en entornos debido a la falta de consistencia y trazabilidad."
+    },
+    {
+      "id": 62,
+      "text": "¿Cómo se define el concepto de Infraestructura como Código (IaC)?",
+      "options": [
+        "Es un proceso para compilar código de aplicaciones móviles directamente dentro de instancias EC2.",
+        "Es el proceso de escribir una plantilla legible por humanos y consumible por máquinas que aprovisiona y administra los recursos en la nube.",
+        "Es un marco de desarrollo exclusivo para el diseño de interfaces web dinámicas.",
+        "Es un mecanismo de automatización manual para enrutar el tráfico de red mediante scripts locales."
+      ],
+      "correct": ["B"],
+      "justification": "La Infraestructura como Código (IaC) define el aprovisionamiento ordenado y la administración a través de plantillas estructuradas (JSON/YAML) legibles y automatizables."
+    },
+    {
+      "id": 63,
+      "text": "¿Cuáles son los tres beneficios clave fundamentales que ofrece la implementación de Infraestructura como Código (IaC)?",
+      "options": [
+        "Elasticidad, Monitoreo y Cifrado automático.",
+        "Reducción de costos fijos, Soporte Multi-cloud y Compilación rápida.",
+        "Reutilización, repetibilidad y capacidad de mantenimiento.",
+        "Acceso por consola, Escalado manual y Aislamiento físico."
+      ],
+      "correct": ["C"],
+      "justification": "Según el material de AWS Academy, los beneficios clave de la estrategia IaC se resumen directamente en la reutilización de código, repetibilidad de entornos idénticos y mantenimiento ágil."
+    },
+    {
+      "id": 64,
+      "text": "En el contexto de AWS CloudFormation, ¿qué es una 'pila' (stack)?",
+      "options": [
+        "Una colección o conjunto de recursos de AWS que se crean, actualizan y eliminan de forma conjunta como una única unidad.",
+        "Un bucket de Amazon S3 diseñado únicamente para almacenar archivos JSON y YAML.",
+        "Una extensión de sintaxis abreviada optimizada para microservicios sin servidores.",
+        "Una herramienta visual interactiva para arrastrar y soltar diagramas de arquitectura en la nube."
+      ],
+      "correct": ["A"],
+      "justification": "En CloudFormation, una colección de recursos administrados de forma unificada bajo una sola plantilla se denomina formalmente 'Pila' (Stack)."
+    },
+    {
+      "id": 65,
+      "text": "¿Cuál es la única sección obligatoria que debe incluirse al escribir una plantilla de AWS CloudFormation?",
+      "options": [
+        "Parámetros (Parameters)",
+        "Condiciones (Conditions)",
+        "Salidas (Outputs)",
+        "Recursos (Resources)"
+      ],
+      "correct": ["D"],
+      "justification": "La anatomía de una plantilla de CloudFormation especifica que todas las secciones son opcionales (Parameters, Outputs, Conditions, etc.), excepto la sección 'Resources', que es la única obligatoria."
+    },
+    {
+      "id": 66,
+      "text": "Si desea utilizar una única plantilla de CloudFormation para implementar un entorno de producción con dos zonas de disponibilidad y un entorno de desarrollo con una sola zona de disponibilidad, ¿qué sección opcional debe configurar?",
+      "options": [
+        "Descripción (Description)",
+        "Condiciones (Conditions)",
+        "Mapeos (Mappings)",
+        "Metadatos (Metadata)"
+      ],
+      "correct": ["B"],
+      "justification": "La sección opcional 'Condiciones' permite controlar lógicamente si se crean ciertos recursos o configuraciones basados en variables ambientales (por ejemplo, validar si es entorno de Producción o Desarrollo)."
+    },
+    {
+      "id": 67,
+      "text": "Un arquitecto de nube nota que un entorno de aplicación ha cambiado y sospecha que alguien abrió manualmente un nuevo puerto TCP en un grupo de seguridad fuera de CloudFormation. ¿Qué característica de CloudFormation permite identificar este cambio?",
+      "options": [
+        "Conjuntos de cambios (Change Sets)",
+        "Diseñador de CloudFormation (Designer)",
+        "Detección de desviaciones (Drift Detection)",
+        "Política de eliminación (DeletionPolicy)"
+      ],
+      "correct": ["C"],
+      "justification": "La detección de desviaciones permite identificar si los recursos de la pila han sido modificados de forma manual fuera de la gestión de CloudFormation, devolviendo el estado (ej. MODIFIED o IN_SYNC)."
+    },
+    {
+      "id": 68,
+      "text": "¿Qué componente de AWS Quick Starts proporciona los detalles técnicos específicos sobre las opciones de implementación y las formas de configuración personalizada?",
+      "options": [
+        "El bucket de Amazon S3 público del socio.",
+        "Una guía de implementación combinada con una plantilla de CloudFormation.",
+        "Un agente automatizado de Amazon Q Developer.",
+        "Un pipeline de AWS CodePipeline preconfigurado."
+      ],
+      "correct": ["B"],
+      "justification": "AWS Quick Starts consta de una plantilla de CloudFormation (arquitectura de referencia automatizada) acompañada siempre por una guía de implementación detallada que indica los pasos y configuraciones sugeridas."
+    },
+    {
+      "id": 69,
+      "text": "¿De qué manera Amazon Q Developer apoya a los desarrolladores durante la fase de 'Probar y asegurar' del ciclo de vida del desarrollo de software (SDLC)?",
+      "options": [
+        "Generando pruebas unitarias y escaneando el código del proyecto en busca de vulnerabilidades de seguridad con sugerencias de corrección.",
+        "Desplegando automáticamente balanceadores de carga en entornos de prueba multi-región.",
+        "Configurando políticas de eliminación (DeletionPolicy) en recursos en estado MODIFIED.",
+        "Reemplazando por completo la sintaxis de las plantillas JSON por lenguajes imperativos tradicionales."
+      ],
+      "correct": ["A"],
+      "justification": "En la etapa de 'Probar y asegurar' del SDLC, Amazon Q Developer asiste escaneando el código en busca de vulnerabilidades y automatizando la creación de pruebas unitarias."
+    },
+    {
+      "id": 70,
+      "text": "De acuerdo con el marco de AWS Well-Architected, ¿cuál de las siguientes es una práctica recomendada fundamental para el pilar de Excelencia Operativa en relación con la automatización?",
+      "options": [
+        "Realizar cambios masivos, infrecuentes e irreversibles para asegurar la estabilidad a largo plazo.",
+        "Efectuar operaciones como código y realizar cambios frecuentes, pequeños y reversibles.",
+        "Evitar por completo la automatización de la integración para priorizar la revisión humana manual.",
+        "Utilizar únicamente la consola de administración de AWS para el despliegue de recursos críticos."
+      ],
+      "correct": ["B"],
+      "justification": "Dentro de los principios del Well-Architected Framework para la Excelencia Operativa, se instruye explícitamente automatizar mediante código y mitigar riesgos mediante cambios pequeños, frecuentes y reversibles."
+    },
+    {
+      "id": 71,
+      "text": "¿Cuál es la función principal de una capa de almacenamiento de datos en caché?",
+      "options": [
+        "Reemplazar por completo a las bases de datos relacionales subyacentes.",
+        "Almacenar un subconjunto de datos en alta velocidad para entregar solicitudes futuras más rápido.",
+        "Diseñar la topología de red pública de una carga de trabajo en la nube.",
+        "Transcodificar archivos de video en múltiples formatos de salida automáticamente."
+      ],
+      "correct": ["B"],
+      "justification": "Una caché es una capa de almacenamiento de datos de alta velocidad que almacena un subconjunto de datos para que las solicitudes futuras de esos datos se entreguen más rápido, aumentando el rendimiento de recuperación de datos."
+    },
+    {
+      "id": 72,
+      "text": "De acuerdo con el módulo, ¿cuál de los siguientes tipos de datos representa un candidato ideal para ser almacenado en caché?",
+      "options": [
+        "Datos generados dinámicamente y personalizados por cada usuario.",
+        "Respuestas en tiempo real que cambian con cada milisegundo.",
+        "Datos estáticos de acceso frecuente y resultados de consultas complejas.",
+        "Datos transaccionales financieros que requieren consistencia estricta inmediata."
+      ],
+      "correct": ["C"],
+      "justification": "Los datos estáticos y de acceso frecuente, así como los resultados de cálculos intensivos o consultas complejas de bases de datos, son excelentes candidatos para el almacenamiento en caché."
+    },
+    {
+      "id": 73,
+      "text": "¿Qué servicio de AWS se define como una red de entrega de contenido (CDN) global que distribuye datos de forma segura con baja latencia?",
+      "options": [
+        "Amazon ElastiCache",
+        "Amazon RDS",
+        "Amazon CloudFront",
+        "Amazon Route 53"
+      ],
+      "correct": ["C"],
+      "justification": "Amazon CloudFront es un servicio de CDN que entrega contenido en todo el mundo de forma segura con baja latencia y altas velocidades de transferencia a través de ubicaciones periféricas."
+    },
+    {
+      "id": 74,
+      "text": "Dentro de la arquitectura de Amazon CloudFront, ¿cuál es la diferencia clave entre las Ubicaciones Periféricas y las Cachés Periféricas Regionales?",
+      "options": [
+        "Las ubicaciones periféricas tienen cachés más grandes y están más lejos de los usuarios.",
+        "Las ubicaciones periféricas son más numerosas, están más cerca del usuario y poseen cachés más pequeñas.",
+        "Las cachés periféricas regionales no pueden almacenar contenido multimedia como videos.",
+        "Las ubicaciones periféricas sustituyen por completo el almacenamiento en buckets de Amazon S3."
+      ],
+      "correct": ["B"],
+      "justification": "Las ubicaciones periféricas son más numerosas y cercanas a los usuarios con cachés más pequeñas para ofrecer contenido popular rápidamente. Las cachés periféricas regionales son menos, están más alejadas y tienen cachés más grandes para contenido menos popular."
+    },
+    {
+      "id": 75,
+      "text": "¿Cuál de los siguientes métodos NO es una estrategia válida descrita para controlar el tiempo de expiración o actualización del contenido en CloudFront?",
+      "options": [
+        "Establecer un valor de Periodo de Vida (TTL) máximo.",
+        "Utilizar solicitudes de invalidación de CloudFront.",
+        "Implementar el control de versiones de contenido.",
+        "Forzar el reinicio físico del nodo perimetral de AWS."
+      ],
+      "correct": ["D"],
+      "justification": "Para controlar el tiempo en caché se utiliza el valor TTL, el control de versiones, encabezados de control de caché y las solicitudes de invalidación. Reiniciar físicamente los nodos no es una opción ni un método administrado por el usuario."
+    },
+    {
+      "id": 76,
+      "text": "Al integrar CloudFront en la arquitectura de red, ¿qué beneficios adicionales de seguridad e infraestructura se obtienen de forma nativa?",
+      "options": [
+        "Cifrado automático de discos duros locales del usuario.",
+        "Mitigación de ataques DDoS mediante servicios integrados como AWS Shield y AWS WAF.",
+        "Eliminación total de la necesidad de configurar buckets en Amazon S3.",
+        "Generación automática de código fuente para aplicaciones frontend."
+      ],
+      "correct": ["B"],
+      "justification": "CloudFront mejora la resiliencia de las aplicaciones frente a los ataques de denegación de servicio distribuido (DDoS) al aprovechar e integrarse con servicios como AWS Shield y AWS WAF."
+    },
+    {
+      "id": 77,
+      "text": "¿Qué servicio de AWS proporciona un almacén de datos en memoria de valor-clave totalmente administrado con latencia inferior a un milisegundo para bases de datos?",
+      "options": [
+        "Amazon DynamoDB",
+        "Amazon ElastiCache",
+        "Amazon Elastic Transcoder",
+        "Amazon Redshift"
+      ],
+      "correct": ["B"],
+      "justification": "Amazon ElastiCache es un almacén de datos en memoria de valor-clave completamente administrado con una latencia inferior a un milisegundo, ideal para el almacenamiento en caché de bases de datos."
+    },
+    {
+      "id": 78,
+      "text": "Si una solución de arquitectura requiere soporte para estructuras de datos complejas, alta disponibilidad con conmutación por error automática y persistencia, ¿qué motor de ElastiCache debe seleccionarse?",
+      "options": [
+        "ElastiCache para Memcached",
+        "ElastiCache para RDS",
+        "ElastiCache para Redis",
+        "ElastiCache para DynamoDB"
+      ],
+      "correct": ["C"],
+      "justification": "ElastiCache para Redis se selecciona cuando se necesitan tipos de datos complejos, persistencia, alta disponibilidad con conmutación por error automática y ordenamiento de conjuntos de datos."
+    },
+    {
+      "id": 79,
+      "text": "¿En qué consiste la estrategia de almacenamiento en caché denominada 'Carga Diferida' (Lazy Loading)?",
+      "options": [
+        "Actualiza la caché inmediatamente después de modificar la base de datos primaria de forma síncrona.",
+        "Copia y precarga todos los datos históricos de la empresa en la caché durante la noche.",
+        "Actualiza la memoria caché únicamente después de que la aplicación solicita activamente los datos y ocurre un error de caché (cache miss).",
+        "Guarda los datos de forma exclusiva en el dispositivo móvil del usuario final."
+      ],
+      "correct": ["C"],
+      "justification": "La carga diferida actualiza la memoria caché luego de que se solicitan los datos. Si los datos no están en la caché (error de caché), se leen de la base de datos y se copian en la caché para futuras solicitudes."
+    },
+    {
+      "id": 80,
+      "text": "Al aplicar los principios del Marco de AWS Well-Architected al diseño de caché, ¿bajo qué pilares se justifican la reducción de costos de transferencia y la mejora del tiempo de respuesta?",
+      "options": [
+        "Excelencia Operativa y Seguridad.",
+        "Sostenibilidad y Fiabilidad únicamente.",
+        "Eficiencia del Rendimiento, Fiabilidad y Optimización de Costos.",
+        "Elasticidad de Cómputo y Almacenamiento Estricto."
+      ],
+      "correct": ["C"],
+      "justification": "El almacenamiento en caché se alinea con los pilares de Eficiencia del Rendimiento (patrones de acceso y velocidad), Fiabilidad (conectividad de alta disponibilidad) y Optimización de Costos (reducción de costos de transferencia de datos y carga en el origen)."
+    }
+]
