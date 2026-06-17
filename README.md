@@ -57,8 +57,6 @@ CÓMO USAR LA APLICACIÓN
 4. Selecciona tu respuesta:
    - Para preguntas de respuesta única, haz clic en el radio button 
      correspondiente.
-   - Para preguntas de respuesta múltiple, marca todas las opciones 
-     que consideres correctas.
 5. Usa los botones "Anterior" y "Siguiente" para navegar entre 
    preguntas.
 6. El botón "Limpiar" elimina la respuesta seleccionada para la 
@@ -87,15 +85,6 @@ objeto representa una pregunta con los siguientes campos:
     "correct": ["A", "C"],      # Letras de las respuestas correctas
     "justification": "Explicación de la respuesta correcta (opcional)"
 }
-
-NOTAS SOBRE LAS RESPUESTAS MÚLTIPLES
-------------------------------------
-- Si "correct" contiene una sola letra, la pregunta se mostrará con 
-  radio buttons (respuesta única).
-- Si "correct" contiene dos o más letras, la pregunta se mostrará con 
-  check boxes (respuesta múltiple).
-- En preguntas de respuesta múltiple, el usuario debe seleccionar 
-  TODAS las opciones correctas para acertar.
 
 EJEMPLO DE USO
 --------------
